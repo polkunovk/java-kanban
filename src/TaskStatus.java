@@ -1,7 +1,7 @@
 enum TaskStatus {
-    НОВАЯ("NEW"),
-    В_ПРОЦЕССЕ("IN_PROGRESS"),
-    ЗАВЕРШЕНА("DONE");
+    NEW("НОВАЯ"),
+    IN_PROGRESS("В_ПРОЦЕССЕ"),
+    DONE("ЗАВЕРШЕНА");
 
     private final String status;
 

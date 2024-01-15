@@ -1,3 +1,0 @@
-interface Identifiable {
-    int getId();
-}

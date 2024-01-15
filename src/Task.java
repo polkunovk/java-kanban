@@ -1,20 +1,21 @@
-class Task implements Identifiable {
-    private static int idCounter = 1;
-
-    private final int id;
+class Task {
+    private int id;
     private final String title;
     private final String description;
     private TaskStatus status;
 
     public Task(String title, String description) {
-        this.id = idCounter++;
         this.title = title;
         this.description = description;
-        this.status = TaskStatus.НОВАЯ;
+        this.status = TaskStatus.NEW;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

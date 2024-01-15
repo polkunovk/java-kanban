@@ -9,12 +9,20 @@ class Epic extends Task {
         this.subtasks = new ArrayList<>();
     }
 
+    public void addSubtask(Subtask subtask) {
+        subtasks.add(subtask);
+    }
+
+    public List<Subtask> getSubtasks() {
+        return new ArrayList<>(subtasks);
+    }
+
     public void updateStatus() {
-        boolean allSubtasksDone = subtasks.stream().allMatch(subtask -> subtask.getStatus() == TaskStatus.ЗАВЕРШЕНА);
+        boolean allSubtasksDone = subtasks.stream().allMatch(subtask -> subtask.getStatus() == TaskStatus.DONE);
         if (allSubtasksDone) {
-            setStatus(TaskStatus.ЗАВЕРШЕНА);
+            setStatus(TaskStatus.DONE);
         } else {
-            setStatus(TaskStatus.В_ПРОЦЕССЕ);
+            setStatus(TaskStatus.IN_PROGRESS);
         }
     }
 }
