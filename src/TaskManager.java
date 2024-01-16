@@ -96,14 +96,12 @@ public class TaskManager {
         allTasks.put(updatedTask.getId(), updatedTask);
     }
 
-    // Добавленный метод для создания общей задачи
     public void createTask(String title, String description) {
         Task task = new Task(title, description);
         task.setId(idCounter++);
         allTasks.put(task.getId(), task);
     }
 
-    // Добавленный метод для обновления статуса эпика
     public void updateEpic(int epicId, TaskStatus status) {
         Epic epic = epics.get(epicId);
         if (epic != null) {
@@ -112,13 +110,36 @@ public class TaskManager {
         }
     }
 
-    // Добавленный метод для обновления статуса подзадачи
     public void updateSubTask(int subtaskId, TaskStatus status) {
         Subtask subtask = subtasks.get(subtaskId);
         if (subtask != null) {
             subtask.setStatus(status);
             updateEpicStatus(subtask.getEpicId());
             updateTask(subtask);
+        }
+    }
+
+    // Метод для удаления общей задачи по идентификатору
+    public void deleteTask(int taskId) {
+        allTasks.remove(taskId);
+    }
+
+    // Метод для удаления эпика по идентификатору
+    public void deleteEpic(int epicId) {
+        Epic epic = epics.get(epicId);
+        if (epic != null) {
+            epics.remove(epicId);
+            allTasks.remove(epicId); // Удаление из общего списка
+        }
+    }
+
+    // Метод для удаления подзадачи по идентификатору
+    public void deleteSubtask(int subtaskId) {
+        Subtask subtask = subtasks.get(subtaskId);
+        if (subtask != null) {
+            subtasks.remove(subtaskId);
+            allTasks.remove(subtaskId); // Удаление из общего списка
+            updateEpicStatus(subtask.getEpicId());
         }
     }
 }
