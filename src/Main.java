@@ -1,11 +1,10 @@
 import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 class Main {
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+
+        HistoryManager historyManager = Managers.getDefaultHistory();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager(historyManager);
 
         taskManager.createEpic("Важный эпик", "Описание важного эпика");
         taskManager.createSubtask("Задача 1", "Описание задачи 1", 1);
@@ -23,6 +22,12 @@ class Main {
         for (Subtask subtask : epicSubtasks) {
             System.out.println("Subtask ID: " + subtask.getId() + ", Title: " + subtask.getTitle() +
                     ", Epic ID: " + subtask.getEpicId() + ", Status: " + subtask.getStatus());
+        }
+
+
+        System.out.println("История:");
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
         }
     }
 }
