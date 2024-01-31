@@ -22,4 +22,3 @@ public class InMemoryHistoryManager implements HistoryManager {
         return new ArrayList<>(history);
     }
 }
-

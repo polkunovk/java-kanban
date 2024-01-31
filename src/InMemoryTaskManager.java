@@ -2,16 +2,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class InMemoryTaskManager implements TaskManager {
-    private static int idCounter = 1;
-    private final List<Task> history;
+    private int idCounter = 1;
     private final Map<Integer, Epic> epics;
     private final Map<Integer, Subtask> subtasks;
     private final HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
-        this.history = new ArrayList<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
         this.historyManager = historyManager;
@@ -40,6 +37,9 @@ public class InMemoryTaskManager implements TaskManager {
         Task task = epics.get(taskId);
         if (task == null) {
             task = subtasks.get(taskId);
+        }
+        if (task != null) {
+            historyManager.add(task);
         }
         return task;
     }
