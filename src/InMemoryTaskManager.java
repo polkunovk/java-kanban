@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 public class InMemoryTaskManager implements TaskManager {
     private int idCounter = 1;
     private final Map<Integer, Epic> epics;
@@ -46,12 +47,24 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(int epicId) {
-        return epics.get(epicId);
+        Epic epic = epics.get(epicId);
+        if (epic != null) {
+            historyManager.add(epic);
+            List<Subtask> epicSubtasks = epic.getSubtasks();
+            for (Subtask subtask : epicSubtasks) {
+                historyManager.add(subtask);
+            }
+        }
+        return epic;
     }
 
     @Override
     public Subtask getSubtaskById(int subtaskId) {
-        return subtasks.get(subtaskId);
+        Subtask subtask = subtasks.get(subtaskId);
+        if (subtask != null) {
+            historyManager.add(subtask);
+        }
+        return subtask;
     }
 
     @Override
@@ -59,6 +72,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = new Epic(title, description);
         epic.setId(idCounter++);
         epics.put(epic.getId(), epic);
+        historyManager.add(epic);
     }
 
     @Override
@@ -70,6 +84,7 @@ public class InMemoryTaskManager implements TaskManager {
             subtasks.put(subtask.getId(), subtask);
             epic.addSubtask(subtask);
             updateEpicStatus(subtask.getEpicId());
+            historyManager.add(subtask);
         }
     }
 
@@ -81,6 +96,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (task instanceof Subtask) {
                 updateEpicStatus(((Subtask) task).getEpicId());
             }
+            historyManager.add(task);
         }
     }
 
@@ -90,6 +106,9 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(epicId);
         if (epic != null) {
             epicSubtasks.addAll(epic.getSubtasks());
+            for (Subtask subtask : epicSubtasks) {
+                historyManager.add(subtask);
+            }
         }
         return epicSubtasks;
     }
