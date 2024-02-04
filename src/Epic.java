@@ -3,15 +3,18 @@ import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
+    private static int idCounter = 1;
     private final List<Subtask> subtasks;
 
     public Epic(String title, String description) {
         super(title, description);
         this.subtasks = new ArrayList<>();
+        setId(idCounter);
+        idCounter++;
     }
 
     public void addSubtask(Subtask subtask) {
-        if (subtask.getEpicId() == getId()) {
+        if (subtask.getEpicId() != getId()) {
             throw new IllegalArgumentException("Нельзя добавить Подзадачу из другого Эпика.");
         }
         subtasks.add(subtask);

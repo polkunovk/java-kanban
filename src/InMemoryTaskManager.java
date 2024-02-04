@@ -73,15 +73,22 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(idCounter++);
         epics.put(epic.getId(), epic);
         historyManager.add(epic);
+        System.out.println("Создан Эпик с ID: " + epic.getId());
     }
 
     @Override
     public void createSubtask(String title, String description, int epicId) {
         Epic epic = epics.get(epicId);
+        System.out.println("Попытка создать Подзадачу для Эпика с ID: " + epicId);
         if (epic != null) {
             Subtask subtask = new Subtask(title, description, epicId);
             subtask.setId(idCounter++);
             subtasks.put(subtask.getId(), subtask);
+
+            if (subtask.getEpicId() != epic.getId()) {
+                throw new IllegalArgumentException("Нельзя добавить Подзадачу из другого Эпика.");
+            }
+
             epic.addSubtask(subtask);
             updateEpicStatus(subtask.getEpicId());
             historyManager.add(subtask);
@@ -138,11 +145,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
+        for (Epic epic : epics.values()) {
+            List<Subtask> epicSubtasks = epic.getSubtasks();
+            for (Subtask subtask : epicSubtasks) {
+                subtasks.remove(subtask.getId());
+            }
+        }
         epics.clear();
     }
 
     @Override
     public void deleteAllSubtasks() {
+        for (Subtask subtask : subtasks.values()) {
+            int epicId = subtask.getEpicId();
+            epics.get(epicId).removeSubtask(subtask);
+        }
         subtasks.clear();
     }
 
@@ -174,8 +191,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteSubtask(int subtaskId) {
         Subtask subtask = subtasks.get(subtaskId);
         if (subtask != null) {
+            int epicId = subtask.getEpicId();
+            epics.get(epicId).removeSubtask(subtask);
             subtasks.remove(subtaskId);
-            updateEpicStatus(subtask.getEpicId());
+            updateEpicStatus(epicId);
         }
     }
 
