@@ -203,7 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void updateTask(Task updatedTask) {
+    protected void updateTask(Task updatedTask) {
         if (updatedTask instanceof Epic) {
             epics.put(updatedTask.getId(), (Epic) updatedTask);
         } else if (updatedTask instanceof Subtask) {
