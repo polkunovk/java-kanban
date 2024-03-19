@@ -198,16 +198,19 @@ public class InMemoryTaskManager implements TaskManager {
     private void updateEpicStatus(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic != null) {
-            epic.updateStatus();
-            updateTask(epic);
-        }
-    }
-
-    protected void updateTask(Task updatedTask) {
-        if (updatedTask instanceof Epic) {
-            epics.put(updatedTask.getId(), (Epic) updatedTask);
-        } else if (updatedTask instanceof Subtask) {
-            subtasks.put(updatedTask.getId(), (Subtask) updatedTask);
+            boolean allSubtasksDone = true;
+            for (Subtask subtask : epic.getSubtasks()) {
+                if (subtask.getStatus() != TaskStatus.DONE) {
+                    allSubtasksDone = false;
+                    break;
+                }
+            }
+            if (allSubtasksDone) {
+                epic.setStatus(TaskStatus.DONE);
+            } else {
+                epic.setStatus(TaskStatus.IN_PROGRESS);
+            }
+            historyManager.add(epic);
         }
     }
 }

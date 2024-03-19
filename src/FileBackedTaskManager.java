@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
+
     private final File saveFile;
 
     public FileBackedTaskManager(HistoryManager historyManager, File saveFile) {
@@ -55,7 +56,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagerSaveException("Ошибка сохранения данных в файл", e);
         }
     }
 
@@ -65,5 +66,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(File file, HistoryManager historyManager) {
         return new FileBackedTaskManager(historyManager, file);
+    }
+
+
+    private static String epicToString(Epic epic) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Task.toString(epic));
+
+        for (Subtask subtask : epic.getSubtasks()) {
+            sb.append(subtask.getId()).append(",");
+        }
+        return sb.toString();
+    }
+
+    private static Epic epicFromString(String value) {
+        String[] parts = value.split(",");
+        Epic epic = new Epic(parts[2], parts[4]);
+        epic.setId(Integer.parseInt(parts[0]));
+        epic.setStatus(TaskStatus.valueOf(parts[3]));
+
+        for (int i = 5; i < parts.length; i++) {
+            epic.addSubtask(new Subtask("", "", Integer.parseInt(parts[i])));
+        }
+        return epic;
     }
 }

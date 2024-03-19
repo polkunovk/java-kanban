@@ -50,26 +50,4 @@ public class Epic extends Task {
     public int hashCode() {
         return Objects.hash(super.hashCode(), subtasks);
     }
-
-    public static String toString(Epic epic) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Task.toString(epic));
-
-        for (Subtask subtask : epic.getSubtasks()) {
-            sb.append(subtask.getId()).append(",");
-        }
-        return sb.toString();
-    }
-
-    public static Epic fromString(String value) {
-        String[] parts = value.split(",");
-        Epic epic = new Epic(parts[2], parts[4]);
-        epic.setId(Integer.parseInt(parts[0]));
-        epic.setStatus(TaskStatus.valueOf(parts[3]));
-
-        for (int i = 5; i < parts.length; i++) {
-            epic.addSubtask(new Subtask("", "", Integer.parseInt(parts[i])));
-        }
-        return epic;
-    }
 }
