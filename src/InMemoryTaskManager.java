@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class InMemoryTaskManager implements TaskManager {
     private int idCounter = 1;
@@ -211,6 +212,16 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.setStatus(TaskStatus.IN_PROGRESS);
             }
             historyManager.add(epic);
+        }
+    }
+
+    @Override
+    public void addTask(Task task) {
+        if (task instanceof Epic) {
+            createEpic(task.getTitle(), task.getDescription());
+        } else if (task instanceof Subtask) {
+            Subtask subtask = (Subtask) task;
+            createSubtask(subtask.getTitle(), subtask.getDescription(), subtask.getEpicId());
         }
     }
 }

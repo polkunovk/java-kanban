@@ -1,6 +1,6 @@
-import java.util.*;
+import java.util.List;
 
-interface TaskManager {
+public interface TaskManager {
 
     List<Task> getAllTasks();
 
@@ -35,4 +35,6 @@ interface TaskManager {
     void deleteSubtask(int subtaskId);
 
     List<Task> getHistory();
+
+    void addTask(Task task); 
 }
