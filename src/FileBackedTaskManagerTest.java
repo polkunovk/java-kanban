@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class FileBackedTaskManagerTest {
 
     @Test
-    public void saveAndLoadEmptyFile() throws IOException {
+    public void saveAndLoadEmptyFile() {
         File saveFile = createTempFile();
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager(new InMemoryHistoryManager(), saveFile);
@@ -21,7 +21,7 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void saveAndLoadMultipleTasks() throws IOException {
+    public void saveAndLoadMultipleTasks() {
         File saveFile = createTempFile();
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager(new InMemoryHistoryManager(), saveFile);
@@ -32,8 +32,8 @@ public class FileBackedTaskManagerTest {
 
         FileBackedTaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(saveFile, new InMemoryHistoryManager());
 
-        int epicsCount = (int) loadedTaskManager.getAllTasks().stream().filter(task -> task instanceof Epic).count();
-        int subtasksCount = (int) loadedTaskManager.getAllTasks().stream().filter(task -> task instanceof Subtask).count();
+        int epicsCount = loadedTaskManager.getAllTasks().stream().filter(task -> task instanceof Epic).mapToInt(task -> 1).sum();
+        int subtasksCount = loadedTaskManager.getAllTasks().stream().filter(task -> task instanceof Subtask).mapToInt(task -> 1).sum();
 
         assertEquals(1, epicsCount);
         assertEquals(2, subtasksCount);
