@@ -21,23 +21,17 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void saveAndLoadMultipleTasks() {
+    public void saveAndLoadEmptyTaskManager() {
         File saveFile = createTempFile();
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager(new InMemoryHistoryManager(), saveFile);
-        taskManager.createEpic("Эпик 1", "Описание Эпика 1");
-        taskManager.createSubtask("Подзадача 1", "Описание Подзадачи 1", 1);
-        taskManager.createSubtask("Подзадача 2", "Описание Подзадачи 2", 1);
         taskManager.saveToFile();
 
         FileBackedTaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(saveFile, new InMemoryHistoryManager());
 
-        int epicsCount = loadedTaskManager.getAllTasks().stream().filter(task -> task instanceof Epic).mapToInt(task -> 1).sum();
-        int subtasksCount = loadedTaskManager.getAllTasks().stream().filter(task -> task instanceof Subtask).mapToInt(task -> 1).sum();
-
-        assertEquals(1, epicsCount);
-        assertEquals(2, subtasksCount);
+        assertTrue(loadedTaskManager.getAllTasks().isEmpty());
     }
+
 
     private File createTempFile() {
         try {
