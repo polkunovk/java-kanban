@@ -1,4 +1,4 @@
-enum TaskStatus {
+public enum  TaskStatus {
     NEW("НОВАЯ"),
     IN_PROGRESS("В_ПРОЦЕССЕ"),
     DONE("ЗАВЕРШЕНА");

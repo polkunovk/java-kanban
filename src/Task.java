@@ -44,4 +44,42 @@ public class Task {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public static String toString(Task task) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(task.getId()).append(",");
+        sb.append(task.getClass().getSimpleName()).append(",");
+        sb.append(task.getTitle()).append(",");
+        sb.append(task.getStatus()).append(",");
+        sb.append(task.getDescription()).append(",");
+        return sb.toString();
+    }
+
+    public static Task fromString(String value) {
+        String[] parts = value.split(",");
+        Task task = null;
+        if (parts.length >= 5) {
+            switch (parts[1]) {
+                case "Epic":
+                    task = new Epic(parts[2], parts[4]);
+                    break;
+                case "Subtask":
+                    if (parts.length >= 6) {
+                        task = new Subtask(parts[2], parts[4], Integer.parseInt(parts[5]));
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (task != null) {
+                task.setId(Integer.parseInt(parts[0]));
+                task.setStatus(TaskStatus.valueOf(parts[3]));
+            }
+        }
+        return task;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }
