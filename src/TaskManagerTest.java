@@ -2,7 +2,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskManagerTests {
+class TaskManagerTest {
 
     private InMemoryHistoryManager historyManager;
     private InMemoryTaskManager taskManager;
