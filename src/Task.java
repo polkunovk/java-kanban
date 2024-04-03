@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -5,6 +7,8 @@ public class Task {
     private final String title;
     private final String description;
     private TaskStatus status;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(String title, String description) {
         this.title = title;
@@ -32,6 +36,30 @@ public class Task {
         this.status = status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,14 +73,16 @@ public class Task {
         return Objects.hash(id);
     }
 
-    public static String toString(Task task) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(task.getId()).append(",");
-        sb.append(task.getClass().getSimpleName()).append(",");
-        sb.append(task.getTitle()).append(",");
-        sb.append(task.getStatus()).append(",");
-        sb.append(task.getDescription()).append(",");
-        return sb.toString();
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", duration=" + duration +
+                ", startTime=" + startTime +
+                '}';
     }
 
     public static Task fromString(String value) {
@@ -64,8 +94,9 @@ public class Task {
                     task = new Epic(parts[2], parts[4]);
                     break;
                 case "Subtask":
-                    if (parts.length >= 6) {
+                    if (parts.length >= 7) {
                         task = new Subtask(parts[2], parts[4], Integer.parseInt(parts[5]));
+                        ((Subtask) task).setStartTime(LocalDateTime.parse(parts[6]));
                     }
                     break;
                 default:
@@ -74,12 +105,14 @@ public class Task {
             if (task != null) {
                 task.setId(Integer.parseInt(parts[0]));
                 task.setStatus(TaskStatus.valueOf(parts[3]));
+                if (parts.length >= 6 && !parts[5].isEmpty()) {
+                    task.setDuration(Duration.parse(parts[5]));
+                }
+                if (parts.length >= 7 && !parts[6].isEmpty()) {
+                    ((Subtask) task).setStartTime(LocalDateTime.parse(parts[6]));
+                }
             }
         }
         return task;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }
