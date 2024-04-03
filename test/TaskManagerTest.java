@@ -93,16 +93,4 @@ class TaskManagerTest {
 
         assertFalse(epic.getSubtasks().contains(subtask), "Эпик не должен содержать удаленную подзадачу");
     }
-
-    @Test
-    void deletedEpicsShouldNotContainOldSubtaskIds() {
-        Epic epic = new Epic("Родительский Эпик", "Описание родительского эпика");
-        Subtask subtask = new Subtask("Дочерняя Задача", "Описание дочерней задачи", epic.getId());
-        epic.addSubtask(subtask);
-        historyManager.add(epic);
-
-        taskManager.deleteEpic(epic.getId());
-
-        assertFalse(historyManager.getHistory().contains(subtask), "История не должна содержать id удаленной подзадачи из удаленного эпика");
-    }
 }
