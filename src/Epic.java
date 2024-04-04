@@ -6,13 +6,12 @@ import java.util.Objects;
 
 public class Epic extends Task {
     private final List<Subtask> subtasks;
-    private Duration totalDuration;
+
     private LocalDateTime endTime;
 
     public Epic(String title, String description) {
         super(title, description);
         this.subtasks = new ArrayList<>();
-        this.totalDuration = Duration.ZERO;
         this.endTime = null;
     }
 
@@ -25,19 +24,15 @@ public class Epic extends Task {
             throw new IllegalArgumentException("Нельзя добавить Подзадачу из другого Эпика.");
         }
         subtasks.add(subtask);
-        totalDuration = totalDuration.plus(subtask.getDuration());
+        setDuration(getDuration().plus(subtask.getDuration()));
         updateEpicTime();
     }
 
     public void removeSubtask(Subtask subtask) {
         if (subtasks.remove(subtask)) {
-            totalDuration = totalDuration.minus(subtask.getDuration());
+            setDuration(getDuration().minus(subtask.getDuration()));
             updateEpicTime();
         }
-    }
-
-    public Duration getTotalDuration() {
-        return totalDuration;
     }
 
     public LocalDateTime getEndTime() {
@@ -76,7 +71,7 @@ public class Epic extends Task {
                 ", title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
-                ", duration=" + totalDuration +
+                ", duration=" + getDuration() +
                 ", startTime=" + getStartTime() +
                 ", endTime=" + endTime +
                 '}';

@@ -16,7 +16,7 @@ abstract class TaskManagerTest2<T extends TaskManager> {
     }
 
     @Test
-    void testAddTaskAndGetAllTasks() {
+    void addAndGetAllTasksShouldIncreaseTaskListSizeAndContainAddedTask() {
         int initialSize = taskManager.getAllTasks().size();
         Task task = new Task("Тестовая задача", "Описание тестовой задачи");
         taskManager.addTask(task);
@@ -25,21 +25,21 @@ abstract class TaskManagerTest2<T extends TaskManager> {
     }
 
     @Test
-    void testGetTaskById() {
+    void getTaskByIdShouldReturnTaskWithGivenId() {
         Task task = new Task("Тестовая задача", "Описание тестовой задачи");
         taskManager.addTask(task);
         assertEquals(task, taskManager.getTaskById(task.getId()));
     }
 
     @Test
-    void testCreateEpic() {
+    void createEpicShouldCreateEpicTaskAndAddToTaskList() {
         taskManager.createEpic("Заголовок эпика", "Описание эпика");
         assertEquals(1, taskManager.getAllTasks().size());
         assertTrue(taskManager.getAllTasks().get(0) instanceof Epic);
     }
 
     @Test
-    void testCreateSubtask() {
+    void createSubtaskShouldCreateSubtaskAndAddToTaskList() {
         taskManager.createEpic("Заголовок эпика", "Описание эпика");
         Epic epic = (Epic) taskManager.getAllTasks().get(0);
         taskManager.createSubtask("Заголовок подзадачи", "Описание подзадачи", epic.getId());
@@ -48,7 +48,7 @@ abstract class TaskManagerTest2<T extends TaskManager> {
     }
 
     @Test
-    void testUpdateTaskStatus() {
+    void updateTaskStatusShouldUpdateTaskStatus() {
         Task task = new Task("Тестовая задача", "Описание тестовой задачи");
         taskManager.addTask(task);
         taskManager.updateTaskStatus(task.getId(), TaskStatus.IN_PROGRESS);
@@ -56,7 +56,7 @@ abstract class TaskManagerTest2<T extends TaskManager> {
     }
 
     @Test
-    void testGetAllSubtasksOfEpic() {
+    void getAllSubtasksOfEpicShouldReturnSubtasksOfEpic() {
         taskManager.createEpic("Заголовок эпика", "Описание эпика");
         Epic epic = (Epic) taskManager.getAllTasks().get(0);
         taskManager.createSubtask("Заголовок подзадачи", "Описание подзадачи", epic.getId());
@@ -66,7 +66,7 @@ abstract class TaskManagerTest2<T extends TaskManager> {
     }
 
     @Test
-    void testDeleteEpic() {
+    void deleteEpicShouldDeleteEpicAndRemoveFromTaskList() {
         taskManager.createEpic("Заголовок эпика", "Описание эпика");
         Epic epic = (Epic) taskManager.getAllTasks().get(0);
         taskManager.deleteEpic(epic.getId());
@@ -74,7 +74,7 @@ abstract class TaskManagerTest2<T extends TaskManager> {
     }
 
     @Test
-    void testDeleteSubtask() {
+    void deleteSubtaskShouldDeleteSubtaskAndKeepEpicInTaskList() {
         taskManager.createEpic("Заголовок эпика", "Описание эпика");
         Epic epic = (Epic) taskManager.getAllTasks().get(0);
         taskManager.createSubtask("Заголовок подзадачи", "Описание подзадачи", epic.getId());
@@ -84,7 +84,7 @@ abstract class TaskManagerTest2<T extends TaskManager> {
     }
 
     @Test
-    void testGetHistory() {
+    void getHistoryShouldReturnListOfTasksAdded() {
         LocalDateTime now = LocalDateTime.now();
         Task task = new Task("Тестовая задача", "Описание тестовой задачи");
         taskManager.addTask(task);
@@ -94,7 +94,7 @@ abstract class TaskManagerTest2<T extends TaskManager> {
     }
 
     @Test
-    void testGetPrioritizedTasks() {
+    void getPrioritizedTasksShouldReturnTasksSortedByPriority() {
         Task task1 = new Task("Задача 1", "Описание 1");
         Task task2 = new Task("Задача 2", "Описание 2");
         Task task3 = new Task("Задача 3", "Описание 3");
@@ -112,5 +112,5 @@ abstract class TaskManagerTest2<T extends TaskManager> {
         assertEquals("Задача 3", prioritizedTasks.get(2).getTitle()); // Задача 3 - обычный приоритет
     }
 
-    abstract void testIsTaskTimeOverlap();
+    abstract void isTaskTimeOverlapShouldCheckIfTasksOverlap();
 }
