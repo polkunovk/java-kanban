@@ -25,4 +25,6 @@ public interface TaskManager {
     List<Task> getPrioritizedTasks();
 
     boolean isTaskTimeOverlap(Task task1, Task task2);
+
+    List<Epic> getAllEpics();
 }
