@@ -49,7 +49,7 @@ public class TasksEndpointTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        Thread.sleep(Duration.ofSeconds(1).toMillis());
+        Thread.sleep(Duration.ofSeconds(3).toMillis());
 
         assertEquals(201, response.statusCode());
     }
