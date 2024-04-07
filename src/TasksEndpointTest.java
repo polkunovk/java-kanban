@@ -35,7 +35,6 @@ public class TasksEndpointTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
-        // Здесь можно добавить дополнительные проверки содержания ответа, если необходимо
     }
 
     @Test
@@ -50,12 +49,10 @@ public class TasksEndpointTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
-        // Здесь можно добавить дополнительные проверки, например, что задача была действительно добавлена в менеджер
     }
 
     @Test
     void testDeleteTask_Success() throws IOException, InterruptedException {
-        // Предположим, что перед тестом была создана задача с id = 1
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/1"))
@@ -65,9 +62,5 @@ public class TasksEndpointTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
-        // Здесь можно добавить дополнительные проверки, например, что задача была действительно удалена из менеджера
     }
-
-    // Добавьте тесты для неуспешных сценариев, например, если запрос отправлен с неверными параметрами
-
 }

@@ -189,7 +189,7 @@ public class HttpTaskServer {
         exchange.getResponseHeaders().set("Access-Control-Max-Age", "86400");
         exchange.getResponseHeaders().set("Cache-Control", "no-cache");
         exchange.getResponseHeaders().set("Pragma", "no-cache");
-        exchange.getResponseHeaders().set("Expires", "-1");
+        exchange.getResponseHeaders().set("Expires", "Thu, 01 Dec 1994 16:00:00 GMT");
         exchange.sendResponseHeaders(statusCode, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
