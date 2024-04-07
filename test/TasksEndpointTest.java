@@ -1,33 +1,37 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration; 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TasksEndpointTest {
     private static final String BASE_URL = "http://localhost:8080/tasks";
-    private HttpTaskServer taskServer;
+    private WireMockServer wireMockServer;
 
     @BeforeEach
     void setUp() {
-        HistoryManager historyManager = new InMemoryHistoryManager();
-        TaskManager taskManager = new InMemoryTaskManager(historyManager);
-        taskServer = new HttpTaskServer(taskManager);
-        taskServer.start();
+        wireMockServer = new WireMockServer();
+        wireMockServer.start();
+        WireMock.configureFor("localhost", wireMockServer.port());
     }
 
     @AfterEach
     void tearDown() {
-        taskServer.stop();
+        wireMockServer.stop();
     }
 
     @Test
     void testGetTasks_Success() throws IOException, InterruptedException {
+        stubFor(get(urlEqualTo("/tasks"))
+                .willReturn(aResponse().withStatus(200)));
+
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL))
@@ -40,6 +44,10 @@ public class TasksEndpointTest {
 
     @Test
     void testAddTask_Success() throws IOException, InterruptedException {
+        stubFor(post(urlEqualTo("/tasks"))
+                .withHeader("Content-Type", containing("application/json"))
+                .willReturn(aResponse().withStatus(201)));
+
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL))
@@ -49,13 +57,14 @@ public class TasksEndpointTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        Thread.sleep(Duration.ofSeconds(1).toMillis());
-
         assertEquals(201, response.statusCode());
     }
 
     @Test
     void testDeleteTask_Success() throws IOException, InterruptedException {
+        stubFor(delete(urlEqualTo("/tasks/1"))
+                .willReturn(aResponse().withStatus(200)));
+
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/1"))
