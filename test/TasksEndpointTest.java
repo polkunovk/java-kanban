@@ -43,7 +43,6 @@ public class TasksEndpointTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL))
                 .header("Content-Type", "application/json")
-                .header("Connection", "close") // Добавляем заголовок "Connection: close"
                 .POST(HttpRequest.BodyPublishers.ofString("{\"title\":\"Test Task\",\"description\":\"Test Description\"}"))
                 .build();
 
