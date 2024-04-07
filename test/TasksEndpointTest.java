@@ -44,18 +44,14 @@ public class TasksEndpointTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL))
                 .header("Content-Type", "application/json")
+                .header("Connection", "close") // Закрытие сервера после ответа
                 .POST(HttpRequest.BodyPublishers.ofString("{\"title\":\"Test Task\",\"description\":\"Test Description\"}"))
                 .build();
 
-        int attempts = 3;
-        HttpResponse<String> response = null;
-        for (int i = 0; i < attempts; i++) {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 201) {
-                break;
-            }
-            Thread.sleep(1000);
-        }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(201, response.statusCode());
+    }
 
         assertEquals(201, response.statusCode());
     }
