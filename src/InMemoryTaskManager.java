@@ -74,6 +74,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public List<Subtask> getAllSubtasks() {
+        return new ArrayList<>(subtasks.values());
+    }
+
+    @Override
     public List<Subtask> getAllSubtasksOfEpic(int epicId) {
         List<Subtask> epicSubtasks = new ArrayList<>();
         Epic epic = epics.get(epicId);
@@ -145,6 +150,23 @@ public class InMemoryTaskManager implements TaskManager {
         LocalDateTime task2End = task2Start.plus(task2.getDuration());
 
         return (task1Start.isBefore(task2End) && task2Start.isBefore(task1End));
+    }
+
+    @Override
+    public void deleteTask(int taskId) {
+        Task task = getTaskById(taskId);
+        if (task != null) {
+            if (task instanceof Epic) {
+                deleteEpic(taskId);
+            } else if (task instanceof Subtask) {
+                deleteSubtask(taskId);
+            }
+        }
+    }
+
+    @Override
+    public List<Epic> getAllEpics() {
+        return new ArrayList<>(epics.values());
     }
 
     private void updateEpicStatus(int epicId) {

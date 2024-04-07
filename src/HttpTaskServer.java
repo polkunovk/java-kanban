@@ -1,13 +1,10 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.List;
-import java.util.Scanner;
-import java.util.ArrayList;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
@@ -119,14 +116,14 @@ public class HttpTaskServer {
         String requestBody = Utils.getRequestBody(exchange);
         Task task = TaskDeserializer.deserializeTask(requestBody);
         taskManager.addTask(task);
-        sendResponse(exchange, 201, "Задача добавлена");
+        sendResponse(exchange, 201, "Задача добавлена", "");
     }
 
     private void handleDeleteTask(HttpExchange exchange) throws IOException {
         String taskIdString = exchange.getRequestURI().getPath().split("/")[2];
         int taskId = Integer.parseInt(taskIdString);
         taskManager.deleteTask(taskId);
-        sendResponse(exchange, 200, "Задача удалена");
+        sendResponse(exchange, 200, "Задача удалена", "");
     }
 
     private void handleGetSubtasks(HttpExchange exchange) throws IOException {
@@ -141,14 +138,14 @@ public class HttpTaskServer {
         for (Subtask subtask : newSubtasks) {
             taskManager.createSubtask(subtask.getTitle(), subtask.getDescription(), subtask.getEpicId());
         }
-        sendResponse(exchange, 201, "Подзадачи добавлены");
+        sendResponse(exchange, 201, "Подзадачи добавлены", "");
     }
 
     private void handleDeleteSubtask(HttpExchange exchange) throws IOException {
         String subtaskIdString = exchange.getRequestURI().getPath().split("/")[2];
         int subtaskId = Integer.parseInt(subtaskIdString);
         taskManager.deleteSubtask(subtaskId);
-        sendResponse(exchange, 200, "Подзадача удалена";
+        sendResponse(exchange, 200, "Подзадача удалена", "");
     }
 
     private void handleGetEpics(HttpExchange exchange) throws IOException {
@@ -160,20 +157,20 @@ public class HttpTaskServer {
     private void handleAddEpic(HttpExchange exchange) throws IOException {
         String requestBody = Utils.getRequestBody(exchange);
         Epic epic = EpicDeserializer.deserializeEpic(requestBody);
-        taskManager.addEpic(epic);
-        sendResponse(exchange, 201, "Эпик добавлен");
+        taskManager.createEpic(epic.getTitle(), epic.getDescription());
+        sendResponse(exchange, 201, "Эпик добавлен", "");
     }
 
     private void handleDeleteEpic(HttpExchange exchange) throws IOException {
         String epicIdString = exchange.getRequestURI().getPath().split("/")[2];
         int epicId = Integer.parseInt(epicIdString);
         taskManager.deleteEpic(epicId);
-        sendResponse(exchange, 200, "Эпик удален");
+        sendResponse(exchange, 200, "Эпик удален", "");
     }
 
     private void handleGetHistory(HttpExchange exchange) throws IOException {
-        List<HistoryEntry> history = taskManager.getHistory();
-        String response = HistorySerializer.serializeHistory(history);
+        List<Task> history = taskManager.getHistory();
+        String response = TaskSerializer.serializeTasks(history);
         sendResponse(exchange, 200, "История получена", response);
     }
 
@@ -184,6 +181,15 @@ public class HttpTaskServer {
     }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String message, String response) throws IOException {
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, DELETE");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Credentials", "true");
+        exchange.getResponseHeaders().set("Access-Control-Max-Age", "86400");
+        exchange.getResponseHeaders().set("Cache-Control", "no-cache");
+        exchange.getResponseHeaders().set("Pragma", "no-cache");
+        exchange.getResponseHeaders().set("Expires", "-1");
         exchange.sendResponseHeaders(statusCode, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());

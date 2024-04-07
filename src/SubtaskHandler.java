@@ -29,20 +29,19 @@ public class SubtaskHandler implements HttpHandler {
 
     private void handleAddSubtask(HttpExchange exchange) throws IOException {
         String requestBody = Utils.getRequestBody(exchange);
-        Subtask subtask = SubtaskDeserializer.deserializeSubtask(requestBody);
-        taskManager.addSubtask(subtask);
-        sendResponse(exchange, 201, "Подзадача добавлена");
+        Subtask subtask = SubtaskDeserializer.deserializeSubtasks(requestBody).get(0); // Исправлено
+        taskManager.createSubtask(subtask.getTitle(), subtask.getDescription(), subtask.getEpicId()); // Исправлено
+        sendResponse(exchange, 201, "Подзадача добавлена", ""); // Исправлено
     }
 
     private void handleDeleteSubtask(HttpExchange exchange) throws IOException {
         String subtaskIdString = exchange.getRequestURI().getPath().split("/")[2];
         int subtaskId = Integer.parseInt(subtaskIdString);
         taskManager.deleteSubtask(subtaskId);
-        sendResponse(exchange, 200, "Подзадача удалена");
+        sendResponse(exchange, 200, "Подзадача удалена", ""); // Исправлено
     }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String message, String response) throws IOException {
-        exchange.sendResponseHeaders(statusCode, response.getBytes().length);
         exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, DELETE");
