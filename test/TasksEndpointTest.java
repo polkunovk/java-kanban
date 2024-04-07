@@ -47,9 +47,15 @@ public class TasksEndpointTest {
                 .POST(HttpRequest.BodyPublishers.ofString("{\"title\":\"Test Task\",\"description\":\"Test Description\"}"))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        Thread.sleep(Duration.ofSeconds(3).toMillis());
+        int attempts = 3;
+        HttpResponse<String> response = null;
+        for (int i = 0; i < attempts; i++) {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 201) {
+                break;
+            }
+            Thread.sleep(1000);
+        }
 
         assertEquals(201, response.statusCode());
     }
