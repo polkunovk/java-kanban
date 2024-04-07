@@ -6,7 +6,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TasksEndpointTest {
@@ -44,14 +43,11 @@ public class TasksEndpointTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL))
                 .header("Content-Type", "application/json")
-                .header("Connection", "close") // Закрытие сервера после ответа
+                .header("Connection", "close") // Добавляем заголовок "Connection: close"
                 .POST(HttpRequest.BodyPublishers.ofString("{\"title\":\"Test Task\",\"description\":\"Test Description\"}"))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        assertEquals(201, response.statusCode());
-    }
 
         assertEquals(201, response.statusCode());
     }
