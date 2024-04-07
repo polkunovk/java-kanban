@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration; 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TasksEndpointTest {
@@ -47,6 +48,8 @@ public class TasksEndpointTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        Thread.sleep(Duration.ofSeconds(1).toMillis());
 
         assertEquals(201, response.statusCode());
     }
