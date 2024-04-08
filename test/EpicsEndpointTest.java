@@ -37,7 +37,7 @@ public class EpicsEndpointTest {
         assertEquals(200, response.statusCode());
     }
 
-    /*@Test
+    @Test
     void testAddEpic_Success() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -49,7 +49,7 @@ public class EpicsEndpointTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
-    }*/
+    }
 
     @Test
     void testDeleteEpic_Success() throws IOException, InterruptedException {
