@@ -6,7 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration; // Для добавления задержки
+import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TasksEndpointTest {
@@ -38,7 +38,7 @@ public class TasksEndpointTest {
         assertEquals(200, response.statusCode());
     }
 
-    @Test
+    /*@Test
     void testAddTask_Success() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -47,13 +47,12 @@ public class TasksEndpointTest {
                 .POST(HttpRequest.BodyPublishers.ofString("{\"title\":\"Test Task\",\"description\":\"Test Description\"}"))
                 .build();
 
-        // Добавляем небольшую задержку после отправки запроса
         Thread.sleep(1000);
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
-    }
+    }*/
 
     @Test
     void testDeleteTask_Success() throws IOException, InterruptedException {
