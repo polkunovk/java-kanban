@@ -1,4 +1,3 @@
-
 import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -44,7 +43,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(saveFile))) {
             for (Task task : getAllTasks()) {
-                writer.write(task.toString());
+                if (task instanceof Epic) {
+                    Epic epic = (Epic) task;
+                    writer.write(String.format("%s,%s,%s,%s,%s,%s,%s",
+                            epic.getId(),
+                            epic.getClass().getSimpleName(),
+                            epic.getTitle(),
+                            epic.getStatus(),
+                            epic.getDescription(),
+                            // Используйте метод getDuration() вместо getTotalDuration()
+                            epic.getDuration(),
+                            epic.getStartTime()
+                    ));
+                } else if (task instanceof Subtask) {
+                    Subtask subtask = (Subtask) task;
+                    writer.write(String.format("%s,%s,%s,%s,%s,%s,%s,%s",
+                            subtask.getId(),
+                            subtask.getClass().getSimpleName(),
+                            subtask.getTitle(),
+                            subtask.getStatus(),
+                            subtask.getDescription(),
+                            subtask.getDuration(),
+                            subtask.getStartTime(),
+                            subtask.getEpicId()
+                    ));
+                } else {
+                    writer.write(task.toString());
+                }
                 writer.newLine();
             }
         } catch (IOException e) {

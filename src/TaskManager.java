@@ -21,4 +21,8 @@ public interface TaskManager {
     List<Task> getHistory();
 
     void addTask(Task task);
+
+    List<Task> getPrioritizedTasks();
+
+    boolean isTaskTimeOverlap(Task task1, Task task2);
 }
