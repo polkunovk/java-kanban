@@ -51,7 +51,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                             epic.getTitle(),
                             epic.getStatus(),
                             epic.getDescription(),
-                            // Используйте метод getDuration() вместо getTotalDuration()
                             epic.getDuration(),
                             epic.getStartTime()
                     ));
