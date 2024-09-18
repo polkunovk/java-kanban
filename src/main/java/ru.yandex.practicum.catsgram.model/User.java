@@ -6,16 +6,13 @@ import java.util.Date;
 
 @Data
 public class User {
-    private Long id;                // Используем Long для совместимости с контроллером
+    private Long id;
     private String email;
-    private String username;        // Добавляем поле username
-    private String login;           // Поле login оставляем, если оно нужно
+    private String username;
+    private String login;
     private String name;
     private LocalDate birthday;
-    private Date registrationDate;  // Оставляем Date для совместимости с контроллером
-
-    // Добавляем геттеры и сеттеры для полей, которые использует UserController
-
+    private Date registrationDate;
     public Long getId() {
         return id;
     }

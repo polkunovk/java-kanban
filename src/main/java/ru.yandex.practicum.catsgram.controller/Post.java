@@ -7,8 +7,6 @@ public class Post {
     private String description;
     private Instant postDate;
 
-    // Геттеры и сеттеры для полей
-
     public Long getId() {
         return id;
     }

@@ -12,7 +12,7 @@ class UserValidationTest {
     @Test
     void testUserEmailCannotBeEmptyOrInvalid() {
         User user = new User();
-        user.setEmail(""); // Пустая электронная почта
+        user.setEmail("");
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             validateUser(user);
@@ -30,14 +30,14 @@ class UserValidationTest {
     @Test
     void testUserLoginCannotBeEmptyOrContainSpaces() {
         User user = new User();
-        user.setLogin(""); // Пустой логин
+        user.setLogin("");
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             validateUser(user);
         });
         assertEquals("Логин не может быть пустым и содержать пробелы.", exception.getMessage());
 
-        user.setLogin("invalid login"); // Логин с пробелом
+        user.setLogin("invalid login");
 
         exception = assertThrows(ValidationException.class, () -> {
             validateUser(user);
@@ -48,7 +48,7 @@ class UserValidationTest {
     @Test
     void testUserBirthdayNotInFuture() {
         User user = new User();
-        user.setBirthday(LocalDate.now().plusDays(1)); // Дата рождения в будущем
+        user.setBirthday(LocalDate.now().plusDays(1));
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             validateUser(user);
@@ -56,7 +56,6 @@ class UserValidationTest {
         assertEquals("Дата рождения не может быть в будущем.", exception.getMessage());
     }
 
-    // Метод валидации, который нужно протестировать
     private void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
             throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ '@'.");

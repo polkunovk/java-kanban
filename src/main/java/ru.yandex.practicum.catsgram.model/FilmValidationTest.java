@@ -12,7 +12,7 @@ class FilmValidationTest {
     @Test
     void testFilmNameCannotBeEmpty() {
         Film film = new Film();
-        film.setName(""); // Пустое название
+        film.setName("");
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             validateFilm(film);
@@ -24,7 +24,7 @@ class FilmValidationTest {
     void testFilmDescriptionMaxLength() {
         Film film = new Film();
         film.setName("Valid Film Name");
-        film.setDescription("a".repeat(201)); // Длина описания больше 200 символов
+        film.setDescription("a".repeat(201));
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             validateFilm(film);
@@ -36,7 +36,7 @@ class FilmValidationTest {
     void testFilmReleaseDateNotBefore1895() {
         Film film = new Film();
         film.setName("Valid Film Name");
-        film.setReleaseDate(LocalDate.of(1894, 12, 27)); // Дата релиза до 28 декабря 1895 года
+        film.setReleaseDate(LocalDate.of(1894, 12, 27));
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             validateFilm(film);
@@ -48,7 +48,7 @@ class FilmValidationTest {
     void testFilmDurationMustBePositive() {
         Film film = new Film();
         film.setName("Valid Film Name");
-        film.setDuration(-1); // Неположительная продолжительность
+        film.setDuration(-1);
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             validateFilm(film);
@@ -56,7 +56,6 @@ class FilmValidationTest {
         assertEquals("Продолжительность фильма должна быть положительным числом.", exception.getMessage());
     }
 
-    // Метод валидации, который нужно протестировать
     private void validateFilm(Film film) {
         if (film.getName() == null || film.getName().isEmpty()) {
             throw new ValidationException("Название фильма не может быть пустым.");
